@@ -1136,6 +1136,9 @@ namespace Microsoft.PowerShell
                     _emphasisStart = startIndex;
                     _emphasisLength = toMatch.Length;
                     _currentHistoryIndex = searchFromPoint;
+                    // setting next index so that when AcceptAndGetNext is triggered it can properly load next history
+                    _getNextHistoryIndex = _currentHistoryIndex < _history.Count - 1 ? _currentHistoryIndex + 1 : 0;
+
                     var moveCursor = Options.HistorySearchCursorMovesToEnd
                         ? HistoryMoveCursor.ToEnd
                         : HistoryMoveCursor.DontMove;
