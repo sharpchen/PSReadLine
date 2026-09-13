@@ -95,6 +95,8 @@ namespace Microsoft.PowerShell
         private HistoryItem _previousHistoryItem;
         private Dictionary<string, int> _hashedHistory;
         private int _currentHistoryIndex;
+        // A helper field for getting next history, specifically for AcceptAndGetNext.
+        // It's considered unset when its value is 0
         private int _getNextHistoryIndex;
         private int _searchHistoryCommandCount;
         private int _recallHistoryCommandCount;
@@ -1140,6 +1142,9 @@ namespace Microsoft.PowerShell
                     _emphasisStart = startIndex;
                     _emphasisLength = toMatch.Length;
                     _currentHistoryIndex = searchFromPoint;
+                    // setting next index so that when AcceptAndGetNext is triggered it can properly load next history
+                    _getNextHistoryIndex = _currentHistoryIndex < _history.Count - 1 ? _currentHistoryIndex + 1 : 0;
+
                     var moveCursor = Options.HistorySearchCursorMovesToEnd
                         ? HistoryMoveCursor.ToEnd
                         : HistoryMoveCursor.DontMove;
